@@ -35,11 +35,13 @@ target_sources(FunPalettes
 target_include_directories(FunPalettes
   PRIVATE
   "${CMAKE_CURRENT_SOURCE_DIR}"
+  "${SDL2_INCLUDE_DIRS}"
 )
 
 target_link_libraries(FunPalettes
   PRIVATE
-  SDL2::SDL2
+  #SDL2::SDL2
+  ${SDL2_LIBRARIES}
   OpenGL::GL
   Eigen3::Eigen
   imgui
