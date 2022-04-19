@@ -29,11 +29,12 @@ target_include_directories(imgui
   PUBLIC
   "${CMAKE_CURRENT_SOURCE_DIR}"
   "${CMAKE_CURRENT_SOURCE_DIR}/backends"
+  "${SDL2_INCLUDE_DIRS}"
 )
 
 target_link_libraries(imgui
   PRIVATE
   ${imgui_link}
-  SDL2::SDL2
+  ${SDL2_LIBRARIES}
   OpenGL::GL
 )
