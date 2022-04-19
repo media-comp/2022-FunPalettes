@@ -67,7 +67,7 @@ void Camera::rotateCamera(Eigen::Vector2f drag, float s) {
   axis = axis.cross(m_dir);
   float w = cos(scale);
   float ws = sin(scale);
-  Eigen::Quaternion quat(w, axis(0) * ws, axis(1) * ws, axis(2) * ws);
+  Eigen::Quaternion<float> quat(w, axis(0) * ws, axis(1) * ws, axis(2) * ws);
   m_pos = quat * m_origin_pos;
   m_dir = (m_look_at - m_pos).normalized();
   updateCameraProj();
