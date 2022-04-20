@@ -150,7 +150,7 @@ int main() {
     context.swapBuffer();
 
     if (sort_palette) {
-      paletteSort(color_list, connect_map, dis_map);
+      paletteSort(color_list, dis_map);
       sort_palette = false;
     }
     if (interpolate_palette) {

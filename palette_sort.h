@@ -6,7 +6,6 @@
 #include "color_point.h"
 #include "d2array.hpp"
 
-void paletteSort(std::vector<ColorPoint>& list, d2array<bool>& connect,
-                 d2array<float>& dismap);
+void paletteSort(std::vector<ColorPoint>& list, d2array<float>& dismap);
 
 #endif  // PALETTE_SORT_H_

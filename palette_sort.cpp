@@ -34,10 +34,8 @@ void find_path(std::vector<int>& point_index, std::vector<int>& best_index,
   }
 }
 
-void paletteSort(std::vector<ColorPoint>& list, d2array<bool>& connect,
-                 d2array<float>& dismap) {
+void paletteSort(std::vector<ColorPoint>& list, d2array<float>& dismap) {
   int size = list.size();
-  connect.resize(size, size, false);
   dismap.resize(size, size, 0.0f);
   for (int i = 0; i < size; i++)
     for (int j = i; j < size; j++) {
