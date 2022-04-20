@@ -111,7 +111,7 @@ int main() {
         remove_label[8]++;
       }
     }
-    ImGui::Text("%d Colors", color_list.size());
+    ImGui::Text("%ld Colors", color_list.size());
     ImGui::End();
 
     context.clearScreen(0.84f, 0.84f, 0.84f);

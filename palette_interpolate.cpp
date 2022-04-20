@@ -6,29 +6,24 @@
 #include <iostream>
 
 void paletteInterpolate(std::vector<ColorPoint>& color_list, int num) {
-  if (num == 0) return;
-
   int size = color_list.size();
-  float indent = 1.0f / static_cast<float>(num + 1);
-  std::cout << indent << " \n";
 
-  std::vector<ColorPoint> reference;
-  reference.resize(size);
-  std::copy(color_list.begin(), color_list.end(), reference.begin());
-  color_list.clear();
+  if (num == 0 || size == 0) return;
 
-  for (int i = 0; i + 1 < reference.size(); i++) {
-    Eigen::Vector3f start(reference[i].lab());
-    Eigen::Vector3f end(reference[i + 1].lab());
+  if (num + 1 >= size) num = size - 1;
 
-    float lerp = 0.0f;
-
-    for (int j = 0; j <= num; j++) {
-      Eigen::Vector3f p = start * (1.0f - lerp) + end * lerp;
-      color_list.emplace_back(ColorPoint(p));
-      lerp += indent;
+  int indent = 1;
+  int start_index = 0;
+  while (indent <= num) {
+    int index = start_index;
+    while (index + indent < color_list.size()) {
+      Eigen::Vector3f left(color_list[index].lab());
+      Eigen::Vector3f right(color_list[index + indent].lab());
+      left = (left + right) / 2.0f;
+      color_list.insert(color_list.begin() + index + 1, ColorPoint(left));
+      index += indent + 1;
     }
+    start_index++;
+    indent++;
   }
-
-  color_list.emplace_back(ColorPoint(reference[size - 1]));
 }
