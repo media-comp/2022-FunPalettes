@@ -2,6 +2,8 @@
 
 FunPalettes is a project aimed to help people with limited artskills understand colors, create and adjust color palettes, extract color palettes form images and apply new palettes.
 
+![thumbnail](screenshot.png)
+
 TODO:
 
 - [x] Color space visualization
@@ -17,6 +19,8 @@ TODO:
 1. Install OpenGL
 2. Install SDL2 and Eigen3
 3. Use CMake to build FunPalette
+
+FunPalettes use legacy OpenGL APIs only, you don't need other modern OpenGL packages like GLEW or GLAD.
 
 Building on Ubuntu:
 ```shell
