@@ -27,7 +27,8 @@ Building on Ubuntu:
 sudo apt-get install libeigen3-dev
 sudo apt-get install libsdl2-dev
 
-git clone https://github.com/media-comp/2022-FunPalettes.git
+mkdir FunPalettes
+git clone https://github.com/media-comp/2022-FunPalettes.git FunPalettes/
 mkdir build
 cd ./build
 cmake .. -DCMAKE_BUILD_TYPE=Release
