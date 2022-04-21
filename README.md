@@ -39,6 +39,11 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 ```
 
+Run:
+```shell
+./FunPalettes
+```
+
 Buliding on Windows:
 The only difference here is how you install and manage packages with CMake. If you are not familiar with this, I recommend this tool for you to start using CMake on Windows:
 
