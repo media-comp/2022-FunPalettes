@@ -7,13 +7,17 @@ FunPalettes is a project aimed to help people with limited artskills understand 
 TODO:
 
 - [x] Color space visualization
-- [ ] Color space navigation
 - [x] Palette creation and adjustment
 - [x] Palette sorting
 - [ ] Quick palette sorting(Better TSP solver)
 - [x] Palette save and load
 - [ ] Palette extraction from image
 - [ ] Palette implementation to image
+
+Bugs:
+
+- [ ] Color space navigation, broken camera rotation
+- [ ] File read and write on Linux (file paths are written in windows style, need platform-specific options)
 
 ## How to Build FunPalette
 1. Install OpenGL
