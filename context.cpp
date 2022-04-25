@@ -3,44 +3,39 @@
 #include <GL/gl.h>
 #include <iostream>
 
-using VEC = Eigen::Vector2f;
-
 ////////////////////////////////////////////////
 ////////////////// Canvas /////////////////////
 //////////////////////////////////////////////
 
-Canvas::Canvas(Eigen::Vector2i window_size, Eigen::Vector2i canvas_size,
-               Eigen::Vector2i canvas_pos)
+Canvas::Canvas(VEC2I window_size, VEC2I canvas_size, VEC2I canvas_pos)
     : m_window_size(window_size), m_canvas_size(canvas_size) {
   float coordx = static_cast<float>(canvas_pos(0)) / window_size(0);
   float coordy = static_cast<float>(canvas_pos(1)) / window_size(1);
-  m_canvas_coord = VEC(coordx, coordy);
-  m_ratio = VEC(static_cast<float>(canvas_size(0)) / window_size(0),
-                static_cast<float>(canvas_size(1)) / window_size(1));
+  m_canvas_coord = VEC2(coordx, coordy);
+  m_ratio = VEC2(static_cast<float>(canvas_size(0)) / window_size(0),
+                 static_cast<float>(canvas_size(1)) / window_size(1));
   padding = 0.1f;
 }
 
-void Canvas::clearCanvas(Eigen::Vector3f color) {
+void Canvas::clearCanvas(VEC3 color) {
   glBegin(GL_QUADS);
   glColor3d(color(0), color(1), color(2));
-  VEC p = canvasToScreen(VEC(0, 0));
+  VEC2 p = canvasToScreen(VEC2(0, 0));
   glVertex3f(p(0), p(1), 0);
-  p = canvasToScreen(VEC(0, 1));
+  p = canvasToScreen(VEC2(0, 1));
   glVertex3f(p(0), p(1), 0);
-  p = canvasToScreen(VEC(1, 1));
+  p = canvasToScreen(VEC2(1, 1));
   glVertex3f(p(0), p(1), 0);
-  p = canvasToScreen(VEC(1, 0));
+  p = canvasToScreen(VEC2(1, 0));
   glVertex3f(p(0), p(1), 0);
   glEnd();
 }
 
-void Canvas::drawRect(Eigen::Vector2f lb, Eigen::Vector2f rb,
-                      Eigen::Vector2f rt, Eigen::Vector2f lt,
-                      Eigen::Vector3f color) {
+void Canvas::drawRect(VEC2 lb, VEC2 rb, VEC2 rt, VEC2 lt, VEC3 color) {
   glBegin(GL_QUADS);
 
   glColor3d(color(0), color(1), color(2));
-  VEC p = canvasToScreen(lb);
+  VEC2 p = canvasToScreen(lb);
   glVertex3f(p(0), p(1), 0);
   p = canvasToScreen(rb);
   glVertex3f(p(0), p(1), 0);
@@ -51,26 +46,25 @@ void Canvas::drawRect(Eigen::Vector2f lb, Eigen::Vector2f rb,
   glEnd();
 }
 
-Eigen::Vector2f Canvas::canvasToScreen(Eigen::Vector2f point) {
+VEC2 Canvas::canvasToScreen(VEC2 point) {
   float x = (point(0) * m_ratio(0) + m_canvas_coord(0)) * 2.0f - 1.0f;
   float y = (point(1) * m_ratio(1) + m_canvas_coord(1)) * 2.0f - 1.0f;
-  return Eigen::Vector2f(x, y);
+  return VEC2(x, y);
 }
 
-bool Canvas::checkInCanvas(Eigen::Vector2f screen_pos) {
+bool Canvas::checkInCanvas(VEC2 screen_pos) {
   return screen_pos(0) >= m_canvas_coord(0) &&
          screen_pos(1) >= m_canvas_coord(1) &&
          screen_pos(0) <= m_canvas_coord(0) + m_ratio(0) &&
          screen_pos(1) <= m_canvas_coord(1) + m_ratio(1);
 }
 
-Eigen::Vector2f Canvas::sdlToScreen(Eigen::Vector2i point) {
-  return VEC(static_cast<float>(point(0)) / m_window_size(0),
-             1.0f - static_cast<float>(point(1)) / m_window_size(1));
+VEC2 Canvas::sdlToScreen(VEC2I point) {
+  return VEC2(static_cast<float>(point(0)) / m_window_size(0),
+              1.0f - static_cast<float>(point(1)) / m_window_size(1));
 }
 
-void Canvas::drawPoint(Eigen::Vector2f pos, float radius,
-                       Eigen::Vector3f color) {
+void Canvas::drawPoint(VEC2 pos, float radius, VEC3 color) {
   if (!inCanvas(pos)) return;
   pos = canvasToScreen(pos);
   glColor3f(color(0), color(1), color(2));
@@ -81,12 +75,11 @@ void Canvas::drawPoint(Eigen::Vector2f pos, float radius,
   glEnd();
   glDisable(GL_POINT_SMOOTH);
 }
-void Canvas::drawLine(Eigen::Vector2f from, Eigen::Vector2f to, float width,
-                      Eigen::Vector3f color) {
+void Canvas::drawLine(VEC2 from, VEC2 to, float width, VEC3 color) {
   static auto min = [](float x, float y) { return x < y ? x : y; };
   if (!(inCanvas(from) || inCanvas(to))) return;
   if (!inCanvas(from) && inCanvas(to)) {
-    Eigen::Vector2f dft = from - to;
+    VEC2 dft = from - to;
     dft.normalize();
     float ms = 1000.0f;
     if (from(0) < padding)
@@ -99,7 +92,7 @@ void Canvas::drawLine(Eigen::Vector2f from, Eigen::Vector2f to, float width,
       ms = min(ms, (1.0f - padding - to(1)) / dft(1));
     from = to + dft * ms;
   } else if (inCanvas(from) && !inCanvas(to)) {
-    Eigen::Vector2f dft = to - from;
+    VEC2 dft = to - from;
     dft.normalize();
     float ms = 1000.0f;
     if (to(0) < padding)
@@ -184,8 +177,7 @@ int Context::createContext(int width, int height) {
   return 1;
 }
 
-Camera* Context::createCamera(const Eigen::Vector3f& pos,
-                              const Eigen::Vector3f& dir, float length,
+Camera* Context::createCamera(const VEC3& pos, const VEC3& dir, float length,
                               float camera_width, float ratio) {
   m_camera = new Camera(pos, dir, length, camera_width, ratio);
   return m_camera;
@@ -224,9 +216,8 @@ void Context::destoryContext() {
 }
 
 Canvas* Context::createCanvas(int size_x, int size_y, int pos_x, int pos_y) {
-  return new Canvas(Eigen::Vector2i(m_width, m_height),
-                    Eigen::Vector2i(size_x, size_y),
-                    Eigen::Vector2i(pos_x, pos_y));
+  return new Canvas(VEC2I(m_width, m_height), VEC2I(size_x, size_y),
+                    VEC2I(pos_x, pos_y));
 }
 
 ////////////////////////////////////////////////

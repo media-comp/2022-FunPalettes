@@ -17,8 +17,8 @@ void paletteInterpolate(std::vector<ColorPoint>& color_list, int num) {
   while (indent <= num) {
     int index = start_index;
     while (index + indent < color_list.size()) {
-      Eigen::Vector3f left(color_list[index].lab());
-      Eigen::Vector3f right(color_list[index + indent].lab());
+      VEC3 left(color_list[index].lab());
+      VEC3 right(color_list[index + indent].lab());
       left = (left + right) / 2.0f;
       color_list.insert(color_list.begin() + index + 1, ColorPoint(left));
       index += indent + 1;

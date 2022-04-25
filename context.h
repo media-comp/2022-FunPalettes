@@ -11,33 +11,31 @@
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_opengl2.h"
 
+#include "data_type.h"
 #include "camera.h"
 
 class Canvas {
  public:
-  Canvas(Eigen::Vector2i window_size, Eigen::Vector2i canvas_size,
-         Eigen::Vector2i canvas_pos);
-  void clearCanvas(Eigen::Vector3f color);
-  void drawPoint(Eigen::Vector2f pos, float radius, Eigen::Vector3f color);
-  void drawLine(Eigen::Vector2f from, Eigen::Vector2f to, float width,
-                Eigen::Vector3f color);
-  void drawRect(Eigen::Vector2f lb, Eigen::Vector2f rb, Eigen::Vector2f rt,
-                Eigen::Vector2f lt, Eigen::Vector3f color);
-  bool checkInCanvas(Eigen::Vector2f screen_pos);
-  Eigen::Vector2f canvasToScreen(Eigen::Vector2f point);
-  Eigen::Vector2f sdlToScreen(Eigen::Vector2i point);
+  Canvas(VEC2I window_size, VEC2I canvas_size, VEC2I canvas_pos);
+  void clearCanvas(VEC3 color);
+  void drawPoint(VEC2 pos, float radius, VEC3 color);
+  void drawLine(VEC2 from, VEC2 to, float width, VEC3 color);
+  void drawRect(VEC2 lb, VEC2 rb, VEC2 rt, VEC2 lt, VEC3 color);
+  bool checkInCanvas(VEC2 screen_pos);
+  VEC2 canvasToScreen(VEC2 point);
+  VEC2 sdlToScreen(VEC2I point);
 
  private:
-  inline bool inCanvas(Eigen::Vector2f point) {
+  inline bool inCanvas(VEC2 point) {
     return (point(0) >= padding) && (point(0) <= 1.0f - padding) &&
            (point(1) >= padding) && (point(1) <= 1.0f - padding);
   }
 
  private:
-  Eigen::Vector2i m_window_size;
-  Eigen::Vector2i m_canvas_size;
-  Eigen::Vector2f m_canvas_coord;
-  Eigen::Vector2f m_ratio;
+  VEC2I m_window_size;
+  VEC2I m_canvas_size;
+  VEC2 m_canvas_coord;
+  VEC2 m_ratio;
   float padding;
 };
 
@@ -51,8 +49,8 @@ class Context {
   void renderImgui();
   void destoryContext();
 
-  Camera* createCamera(const Eigen::Vector3f& pos, const Eigen::Vector3f& dir,
-                       float length, float camera_width, float ratio);
+  Camera* createCamera(const VEC3& pos, const VEC3& dir, float length,
+                       float camera_width, float ratio);
   Canvas* createCanvas(int size_x, int size_y, int pos_x, int pos_y);
 
   inline int get_width() { return m_width; }

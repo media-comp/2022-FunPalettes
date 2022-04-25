@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "data_type.h"
 #include "color_point.h"
 
 void paletteInterpolate(std::vector<ColorPoint>& color_list, int num);

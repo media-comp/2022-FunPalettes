@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "data_type.h"
 #include "color_point.h"
 
 void savePalette(const std::vector<ColorPoint>& color_list);

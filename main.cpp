@@ -10,8 +10,6 @@
 #include "palette_sort.h"
 #include "palette_interpolate.h"
 
-using VEC = Eigen::Vector3f;
-
 int main() {
   SDL_SetMainReady();
 
@@ -23,13 +21,13 @@ int main() {
   std::vector<ColorPoint> color_list;
   color_list.clear();
   d2array<bool> connect_map(0, 0);
-  d2array<float> dis_map(0, 0);
+  d2array<SCALAR> dis_map(0, 0);
 
-  VEC camera_pos(180, 120, -90);
-  VEC camera_look_at(0, 0, 0);
-  float camera_length = 1.2f;
-  float camera_width = 10.0f;
-  float camera_ratio = static_cast<float>(height) / width;
+  VEC3 camera_pos(180, 120, -90);
+  VEC3 camera_look_at(0, 0, 0);
+  SCALAR camera_length = 1.2f;
+  SCALAR camera_width = 10.0f;
+  SCALAR camera_ratio = static_cast<SCALAR>(height) / width;
   Camera* camera = context.createCamera(
       camera_pos, camera_look_at, camera_length, camera_width, camera_ratio);
   Canvas* canvas = context.createCanvas(width * 0.7f, height * 0.7f,
@@ -37,10 +35,10 @@ int main() {
   Canvas* palette_canvas = context.createCanvas(width * 0.7f, height * 0.13f,
                                                 width * 0.24f, height * 0.09f);
 
-  const float nanf = 9999.0f;
-  Eigen::Vector2f drag_start(nanf, nanf);
-  Eigen::Vector2f drag_end;
-  float dis = 100000.0f;
+  const SCALAR nanf = 9999.0f;
+  VEC2 drag_start(nanf, nanf);
+  VEC2 drag_end;
+  SCALAR dis = 100000.0f;
   int interpolate_num = 0;
 
   // Main loop
@@ -57,17 +55,16 @@ int main() {
         done = true;
       } else if (event.type == SDL_MOUSEBUTTONDOWN &&
                  event.button.button == 1) {
-        Eigen::Vector2f screen_pos = canvas->sdlToScreen(
-            Eigen::Vector2i(event.button.x, event.button.y));
+        VEC2 screen_pos =
+            canvas->sdlToScreen(VEC2I(event.button.x, event.button.y));
         if (canvas->checkInCanvas(screen_pos)) {
           drag_start = screen_pos;
           camera->enableDrag();
         }
       } else if (event.type == SDL_MOUSEBUTTONUP && event.button.button == 1) {
-        drag_start = Eigen::Vector2f(nanf, nanf);
+        drag_start = VEC2(nanf, nanf);
       } else if (drag_start(0) != nanf && event.type == SDL_MOUSEMOTION) {
-        drag_end = canvas->sdlToScreen(
-            Eigen::Vector2i(event.motion.x, event.motion.y));
+        drag_end = canvas->sdlToScreen(VEC2I(event.motion.x, event.motion.y));
       }
     }
 
@@ -82,7 +79,7 @@ int main() {
     ImGui::Begin("Palette Editor");
     /*ImGui::Text("__________________");
     ImGui::Text("Debug Editor");
-    ImGui::InputFloat3("Debug Window", camera->get_pos().data());*/
+    ImGui::InputSCALAR3("Debug Window", camera->get_pos().data());*/
 
     if (ImGui::Button("Load Color")) loadPalette(color_list);
     if (ImGui::Button("Save Color")) savePalette(color_list);
@@ -116,7 +113,7 @@ int main() {
 
     context.clearScreen(0.84f, 0.84f, 0.84f);
 
-    canvas->clearCanvas(VEC(33, 37, 43) / 255.0f);
+    canvas->clearCanvas(VEC3(33, 37, 43) / 255.0f);
 
     for (int i = 0; i + 1 < color_list.size(); i++) {
       canvas->drawLine(camera->worldToScreen(color_list[i].lab()),
@@ -128,20 +125,19 @@ int main() {
       canvas->drawPoint(camera->worldToScreen(color.lab()), 15.0f,
                         color.rgb3f());
     }
-    palette_canvas->clearCanvas(VEC(240, 240, 240) / 255.0f);
-    float indentx = 0.005f;
-    float paddingx = 0.03f;
-    float paddingy = 0.1f;
-    float width =
-        (1.0f - indentx * (static_cast<float>(color_list.size()) - 1) -
+    palette_canvas->clearCanvas(VEC3(240, 240, 240) / 255.0f);
+    SCALAR indentx = 0.005f;
+    SCALAR paddingx = 0.03f;
+    SCALAR paddingy = 0.1f;
+    SCALAR width =
+        (1.0f - indentx * (static_cast<SCALAR>(color_list.size()) - 1) -
          paddingx * 2.0f) /
         color_list.size();
-    float pos = paddingx;
+    SCALAR pos = paddingx;
     for (int i = 0; i < color_list.size(); i++) {
-      palette_canvas->drawRect(Eigen::Vector2f(pos, paddingy),
-                               Eigen::Vector2f(pos + width, paddingy),
-                               Eigen::Vector2f(pos + width, 1.0f - paddingy),
-                               Eigen::Vector2f(pos, 1.0f - paddingy),
+      palette_canvas->drawRect(VEC2(pos, paddingy), VEC2(pos + width, paddingy),
+                               VEC2(pos + width, 1.0f - paddingy),
+                               VEC2(pos, 1.0f - paddingy),
                                color_list[i].rgb3f());
       pos += width + indentx;
     }

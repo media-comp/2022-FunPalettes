@@ -23,7 +23,7 @@ ColorPoint::ColorPoint(const ColorPoint& copyfrom) {
 
 ColorPoint::ColorPoint(ImVec4 rgb) : m_rgb(rgb) { updateColor(); }
 
-ColorPoint::ColorPoint(const Eigen::Vector3f& lab) : m_lab(lab) {
+ColorPoint::ColorPoint(const VEC3& lab) : m_lab(lab) {
   ImVec4 rgb;
   float ciel = lab(0);
   float ciea = lab(1);
@@ -77,7 +77,7 @@ ColorPoint::ColorPoint(const Eigen::Vector3f& lab) : m_lab(lab) {
 }
 
 std::string ColorPoint::hex() const {
-  Eigen::Vector3i hc = rgbi();
+  VEC3I hc = rgbi();
   unsigned int result = 0;
   for (int i = 0; i < 3; i++) {
     result <<= 4;
@@ -142,9 +142,9 @@ void ColorPoint::updateColor() {
   float CIE_L = (116.0f * var_Y) - 16.0f;
   float CIE_a = 500.0f * (var_X - var_Y);
   float CIE_b = 200.0f * (var_Y - var_Z);
-  m_lab = Eigen::Vector3f(CIE_L, CIE_a, CIE_b);
+  m_lab = VEC3(CIE_L, CIE_a, CIE_b);
 }
 
-float ColorPoint::distanceE2000(const Eigen::Vector3f o_lab) const {
+float ColorPoint::distanceE2000(const VEC3 o_lab) const {
   return (m_lab - o_lab).norm();
 }
