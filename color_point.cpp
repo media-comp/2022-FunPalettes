@@ -7,9 +7,9 @@ ColorPoint::ColorPoint(unsigned int hexcolor) {
   hc[2] = hexcolor & 0xff;
   hc[1] = (hexcolor & 0xff00) >> 8;
   hc[0] = (hexcolor & 0xff0000) >> 16;
-  float fc[3];
+  SCALAR fc[3];
   for (int i = 0; i < 3; i++) {
-    fc[i] = static_cast<float>(hc[i]) / 255.0f;
+    fc[i] = static_cast<SCALAR>(hc[i]) / 255.0f;
   }
   m_rgb.x = fc[0];
   m_rgb.y = fc[1];
@@ -25,12 +25,12 @@ ColorPoint::ColorPoint(ImVec4 rgb) : m_rgb(rgb) { updateColor(); }
 
 ColorPoint::ColorPoint(const VEC3& lab) : m_lab(lab) {
   ImVec4 rgb;
-  float ciel = lab(0);
-  float ciea = lab(1);
-  float cieb = lab(2);
-  float var_Y = (ciel + 16.0f) / 116.0f;
-  float var_X = ciea / 500.0f + var_Y;
-  float var_Z = var_Y - cieb / 200.0f;
+  SCALAR ciel = lab(0);
+  SCALAR ciea = lab(1);
+  SCALAR cieb = lab(2);
+  SCALAR var_Y = (ciel + 16.0f) / 116.0f;
+  SCALAR var_X = ciea / 500.0f + var_Y;
+  SCALAR var_Z = var_Y - cieb / 200.0f;
 
   if (pow(var_Y, 3.0f) > 0.008856f)
     var_Y = pow(var_Y, 3.0f);
@@ -45,17 +45,17 @@ ColorPoint::ColorPoint(const VEC3& lab) : m_lab(lab) {
   else
     var_Z = (var_Z - 16.0f / 116.0f) / 7.787f;
 
-  float X = var_X * 95.047f;
-  float Y = var_Y * 100.0f;
-  float Z = var_Z * 108.883f;
+  SCALAR X = var_X * 95.047f;
+  SCALAR Y = var_Y * 100.0f;
+  SCALAR Z = var_Z * 108.883f;
 
-  float var_X2 = X / 100.0f;
-  float var_Y2 = Y / 100.0f;
-  float var_Z2 = Z / 100.0f;
+  SCALAR var_X2 = X / 100.0f;
+  SCALAR var_Y2 = Y / 100.0f;
+  SCALAR var_Z2 = Z / 100.0f;
 
-  float var_R = var_X2 * 3.2406f + var_Y2 * -1.5372f + var_Z2 * -0.4986f;
-  float var_G = var_X2 * -0.9689f + var_Y2 * 1.8758f + var_Z2 * 0.0415f;
-  float var_B = var_X2 * 0.0557f + var_Y2 * -0.2040f + var_Z2 * 1.0570f;
+  SCALAR var_R = var_X2 * 3.2406f + var_Y2 * -1.5372f + var_Z2 * -0.4986f;
+  SCALAR var_G = var_X2 * -0.9689f + var_Y2 * 1.8758f + var_Z2 * 0.0415f;
+  SCALAR var_B = var_X2 * 0.0557f + var_Y2 * -0.2040f + var_Z2 * 1.0570f;
 
   if (var_R > 0.0031308f)
     var_R = 1.055f * (pow(var_R, (1.0f / 2.4f))) - 0.055f;
@@ -98,9 +98,9 @@ std::string ColorPoint::hex() const {
 }
 
 void ColorPoint::updateColor() {
-  float var_R = m_rgb.x;
-  float var_G = m_rgb.y;
-  float var_B = m_rgb.z;
+  SCALAR var_R = m_rgb.x;
+  SCALAR var_G = m_rgb.y;
+  SCALAR var_B = m_rgb.z;
   if (var_R > 0.04045f)
     var_R = pow(((var_R + 0.055f) / 1.055f), 2.4f);
   else
@@ -118,13 +118,13 @@ void ColorPoint::updateColor() {
   var_G = var_G * 100.0f;
   var_B = var_B * 100.0f;
 
-  float X = var_R * 0.4124f + var_G * 0.3576f + var_B * 0.1805f;
-  float Y = var_R * 0.2126f + var_G * 0.7152f + var_B * 0.0722f;
-  float Z = var_R * 0.0193f + var_G * 0.1192f + var_B * 0.9505f;
+  SCALAR X = var_R * 0.4124f + var_G * 0.3576f + var_B * 0.1805f;
+  SCALAR Y = var_R * 0.2126f + var_G * 0.7152f + var_B * 0.0722f;
+  SCALAR Z = var_R * 0.0193f + var_G * 0.1192f + var_B * 0.9505f;
 
-  float var_X = X / 95.047f;
-  float var_Y = Y / 100.0f;
-  float var_Z = Z / 108.883f;
+  SCALAR var_X = X / 95.047f;
+  SCALAR var_Y = Y / 100.0f;
+  SCALAR var_Z = Z / 108.883f;
 
   if (var_X > 0.008856f)
     var_X = pow(var_X, (1.0f / 3.0f));
@@ -139,12 +139,12 @@ void ColorPoint::updateColor() {
   else
     var_Z = (7.787f * var_Z) + (16.0f / 116.0f);
 
-  float CIE_L = (116.0f * var_Y) - 16.0f;
-  float CIE_a = 500.0f * (var_X - var_Y);
-  float CIE_b = 200.0f * (var_Y - var_Z);
+  SCALAR CIE_L = (116.0f * var_Y) - 16.0f;
+  SCALAR CIE_a = 500.0f * (var_X - var_Y);
+  SCALAR CIE_b = 200.0f * (var_Y - var_Z);
   m_lab = VEC3(CIE_L, CIE_a, CIE_b);
 }
 
-float ColorPoint::distanceE2000(const VEC3 o_lab) const {
+SCALAR ColorPoint::distanceE2000(const VEC3 o_lab) const {
   return (m_lab - o_lab).norm();
 }

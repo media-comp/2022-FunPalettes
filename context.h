@@ -18,8 +18,8 @@ class Canvas {
  public:
   Canvas(VEC2I window_size, VEC2I canvas_size, VEC2I canvas_pos);
   void clearCanvas(VEC3 color);
-  void drawPoint(VEC2 pos, float radius, VEC3 color);
-  void drawLine(VEC2 from, VEC2 to, float width, VEC3 color);
+  void drawPoint(VEC2 pos, SCALAR radius, VEC3 color);
+  void drawLine(VEC2 from, VEC2 to, SCALAR width, VEC3 color);
   void drawRect(VEC2 lb, VEC2 rb, VEC2 rt, VEC2 lt, VEC3 color);
   bool checkInCanvas(VEC2 screen_pos);
   VEC2 canvasToScreen(VEC2 point);
@@ -36,7 +36,7 @@ class Canvas {
   VEC2I m_canvas_size;
   VEC2 m_canvas_coord;
   VEC2 m_ratio;
-  float padding;
+  SCALAR padding;
 };
 
 class Context {
@@ -45,12 +45,12 @@ class Context {
   int createContext(int width, int height);
   void newFrame();
   void swapBuffer();
-  void clearScreen(float color_r, float color_g, float color_b);
+  void clearScreen(SCALAR color_r, SCALAR color_g, SCALAR color_b);
   void renderImgui();
   void destoryContext();
 
-  Camera* createCamera(const VEC3& pos, const VEC3& dir, float length,
-                       float camera_width, float ratio);
+  Camera* createCamera(const VEC3& pos, const VEC3& dir, SCALAR length,
+                       SCALAR camera_width, SCALAR ratio);
   Canvas* createCanvas(int size_x, int size_y, int pos_x, int pos_y);
 
   inline int get_width() { return m_width; }

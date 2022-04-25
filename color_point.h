@@ -21,13 +21,13 @@ class ColorPoint {
                  static_cast<int>(m_rgb.z * 255.0f));
   }
   inline VEC3 lab() const { return m_lab; }
-  inline float* data() { return reinterpret_cast<float*>(&m_rgb); }
+  inline SCALAR* data() { return reinterpret_cast<SCALAR*>(&m_rgb); }
 
   std::string hex() const;
 
   void updateColor();
 
-  float distanceE2000(const VEC3 o_lab) const;
+  SCALAR distanceE2000(const VEC3 o_lab) const;
 
  private:
   ImVec4 m_rgb;

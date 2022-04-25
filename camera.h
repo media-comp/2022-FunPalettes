@@ -7,15 +7,15 @@
 
 class Camera {
  public:
-  Camera(const VEC3& pos, const VEC3& look_at, float length, float camera_width,
-         float ratio);
-  void setCamera(const VEC3& pos, const VEC3& look_at, float length,
-                 float camera_width, float ratio);
+  Camera(const VEC3& pos, const VEC3& look_at, SCALAR length,
+         SCALAR camera_width, SCALAR ratio);
+  void setCamera(const VEC3& pos, const VEC3& look_at, SCALAR length,
+                 SCALAR camera_width, SCALAR ratio);
   void updateCameraProj();
   VEC2 worldToScreen(const VEC3& point);
   void enableDrag();
   void disableDrag();
-  void rotateCamera(VEC2 drag, float s);
+  void rotateCamera(VEC2 drag, SCALAR s);
 
   inline VEC3 get_pos() { return m_pos; }
   inline VEC3 get_look_at() { return m_look_at; }
@@ -28,9 +28,9 @@ class Camera {
   Eigen::Matrix3f m_proj;
   VEC3 m_origin_pos;
   VEC3 m_origin_dir;
-  float m_length;
-  float m_width;
-  float m_height;
+  SCALAR m_length;
+  SCALAR m_width;
+  SCALAR m_height;
 };
 
 #endif  // CAMERA_H_

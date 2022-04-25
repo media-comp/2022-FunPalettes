@@ -4,8 +4,8 @@
 #include <iostream>
 
 void find_path(std::vector<int>& point_index, std::vector<int>& best_index,
-               const d2array<float>& dismap, int pos, float dis,
-               float& min_dis) {
+               const d2array<SCALAR>& dismap, int pos, SCALAR dis,
+               SCALAR& min_dis) {
   if (pos == dismap.size_x()) {
     if (min_dis == -1.0f || min_dis > dis) {
       min_dis = dis;
@@ -25,7 +25,7 @@ void find_path(std::vector<int>& point_index, std::vector<int>& best_index,
       }
     if (!exist) {
       point_index.at(pos) = ins;
-      float new_dis =
+      SCALAR new_dis =
           (pos == 0 ? 0.0f : dismap(point_index[pos - 1], point_index[pos]));
       find_path(point_index, best_index, dismap, pos + 1, dis + new_dis,
                 min_dis);
@@ -34,7 +34,7 @@ void find_path(std::vector<int>& point_index, std::vector<int>& best_index,
   }
 }
 
-void paletteSort(std::vector<ColorPoint>& list, d2array<float>& dismap) {
+void paletteSort(std::vector<ColorPoint>& list, d2array<SCALAR>& dismap) {
   int size = list.size();
   dismap.resize(size, size, 0.0f);
   for (int i = 0; i < size; i++)
@@ -48,7 +48,7 @@ void paletteSort(std::vector<ColorPoint>& list, d2array<float>& dismap) {
     }
   std::vector<int> point_index(size, -1);
   std::vector<int> best_index;
-  float min_dis = -1.0f;
+  SCALAR min_dis = -1.0f;
   find_path(point_index, best_index, dismap, 0, 0.0f, min_dis);
   for (int i = 0; i < size; i++) std::cout << best_index[i] << " ";
   std::cout << min_dis << "\n";

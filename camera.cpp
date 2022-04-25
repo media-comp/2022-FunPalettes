@@ -3,8 +3,8 @@
 #include <Eigen/Geometry>
 #include <iostream>
 
-Camera::Camera(const VEC3& pos, const VEC3& look_at, float length,
-               float camera_width, float ratio)
+Camera::Camera(const VEC3& pos, const VEC3& look_at, SCALAR length,
+               SCALAR camera_width, SCALAR ratio)
     : m_pos(pos),
       m_look_at(look_at),
       m_length(length),
@@ -14,8 +14,8 @@ Camera::Camera(const VEC3& pos, const VEC3& look_at, float length,
   updateCameraProj();
 }
 
-void Camera::setCamera(const VEC3& pos, const VEC3& look_at, float length,
-                       float camera_width, float ratio) {
+void Camera::setCamera(const VEC3& pos, const VEC3& look_at, SCALAR length,
+                       SCALAR camera_width, SCALAR ratio) {
   m_pos = pos;
   m_look_at = look_at;
   m_dir = (look_at - pos).normalized();
@@ -57,15 +57,15 @@ void Camera::enableDrag() {
 
 void Camera::disableDrag() {}
 
-void Camera::rotateCamera(VEC2 drag, float s) {
-  float scale = drag.norm() * s;
+void Camera::rotateCamera(VEC2 drag, SCALAR s) {
+  SCALAR scale = drag.norm() * s;
   VEC3 axis(drag(0), 0, drag(1));
   axis.normalize();
   axis = m_proj.transpose() * axis;
   axis = axis.cross(m_dir);
-  float w = cos(scale);
-  float ws = sin(scale);
-  Eigen::Quaternion<float> quat(w, axis(0) * ws, axis(1) * ws, axis(2) * ws);
+  SCALAR w = cos(scale);
+  SCALAR ws = sin(scale);
+  Eigen::Quaternion<SCALAR> quat(w, axis(0) * ws, axis(1) * ws, axis(2) * ws);
   m_pos = quat * m_origin_pos;
   m_dir = (m_look_at - m_pos).normalized();
   updateCameraProj();

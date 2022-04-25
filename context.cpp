@@ -9,11 +9,11 @@
 
 Canvas::Canvas(VEC2I window_size, VEC2I canvas_size, VEC2I canvas_pos)
     : m_window_size(window_size), m_canvas_size(canvas_size) {
-  float coordx = static_cast<float>(canvas_pos(0)) / window_size(0);
-  float coordy = static_cast<float>(canvas_pos(1)) / window_size(1);
+  SCALAR coordx = static_cast<SCALAR>(canvas_pos(0)) / window_size(0);
+  SCALAR coordy = static_cast<SCALAR>(canvas_pos(1)) / window_size(1);
   m_canvas_coord = VEC2(coordx, coordy);
-  m_ratio = VEC2(static_cast<float>(canvas_size(0)) / window_size(0),
-                 static_cast<float>(canvas_size(1)) / window_size(1));
+  m_ratio = VEC2(static_cast<SCALAR>(canvas_size(0)) / window_size(0),
+                 static_cast<SCALAR>(canvas_size(1)) / window_size(1));
   padding = 0.1f;
 }
 
@@ -47,8 +47,8 @@ void Canvas::drawRect(VEC2 lb, VEC2 rb, VEC2 rt, VEC2 lt, VEC3 color) {
 }
 
 VEC2 Canvas::canvasToScreen(VEC2 point) {
-  float x = (point(0) * m_ratio(0) + m_canvas_coord(0)) * 2.0f - 1.0f;
-  float y = (point(1) * m_ratio(1) + m_canvas_coord(1)) * 2.0f - 1.0f;
+  SCALAR x = (point(0) * m_ratio(0) + m_canvas_coord(0)) * 2.0f - 1.0f;
+  SCALAR y = (point(1) * m_ratio(1) + m_canvas_coord(1)) * 2.0f - 1.0f;
   return VEC2(x, y);
 }
 
@@ -60,11 +60,11 @@ bool Canvas::checkInCanvas(VEC2 screen_pos) {
 }
 
 VEC2 Canvas::sdlToScreen(VEC2I point) {
-  return VEC2(static_cast<float>(point(0)) / m_window_size(0),
-              1.0f - static_cast<float>(point(1)) / m_window_size(1));
+  return VEC2(static_cast<SCALAR>(point(0)) / m_window_size(0),
+              1.0f - static_cast<SCALAR>(point(1)) / m_window_size(1));
 }
 
-void Canvas::drawPoint(VEC2 pos, float radius, VEC3 color) {
+void Canvas::drawPoint(VEC2 pos, SCALAR radius, VEC3 color) {
   if (!inCanvas(pos)) return;
   pos = canvasToScreen(pos);
   glColor3f(color(0), color(1), color(2));
@@ -75,13 +75,13 @@ void Canvas::drawPoint(VEC2 pos, float radius, VEC3 color) {
   glEnd();
   glDisable(GL_POINT_SMOOTH);
 }
-void Canvas::drawLine(VEC2 from, VEC2 to, float width, VEC3 color) {
-  static auto min = [](float x, float y) { return x < y ? x : y; };
+void Canvas::drawLine(VEC2 from, VEC2 to, SCALAR width, VEC3 color) {
+  static auto min = [](SCALAR x, SCALAR y) { return x < y ? x : y; };
   if (!(inCanvas(from) || inCanvas(to))) return;
   if (!inCanvas(from) && inCanvas(to)) {
     VEC2 dft = from - to;
     dft.normalize();
-    float ms = 1000.0f;
+    SCALAR ms = 1000.0f;
     if (from(0) < padding)
       ms = min(ms, -to(0) / dft(0));
     else if (from(0) > 1.0f - padding)
@@ -94,7 +94,7 @@ void Canvas::drawLine(VEC2 from, VEC2 to, float width, VEC3 color) {
   } else if (inCanvas(from) && !inCanvas(to)) {
     VEC2 dft = to - from;
     dft.normalize();
-    float ms = 1000.0f;
+    SCALAR ms = 1000.0f;
     if (to(0) < padding)
       ms = min(ms, -from(0) / dft(0));
     else if (to(0) > 1.0f - padding)
@@ -177,8 +177,8 @@ int Context::createContext(int width, int height) {
   return 1;
 }
 
-Camera* Context::createCamera(const VEC3& pos, const VEC3& dir, float length,
-                              float camera_width, float ratio) {
+Camera* Context::createCamera(const VEC3& pos, const VEC3& dir, SCALAR length,
+                              SCALAR camera_width, SCALAR ratio) {
   m_camera = new Camera(pos, dir, length, camera_width, ratio);
   return m_camera;
 }
@@ -189,7 +189,7 @@ void Context::newFrame() {
   ImGui::NewFrame();
 }
 
-void Context::clearScreen(float color_r, float color_g, float color_b) {
+void Context::clearScreen(SCALAR color_r, SCALAR color_g, SCALAR color_b) {
   ImGuiIO& io = ImGui::GetIO();
   (void)io;
   glViewport(0, 0, static_cast<int>(io.DisplaySize.x),
