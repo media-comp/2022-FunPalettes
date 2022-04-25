@@ -7,13 +7,17 @@ FunPalettes is a project aimed to help people with limited artskills understand 
 TODO:
 
 - [x] Color space visualization
-- [ ] Color space navigation
 - [x] Palette creation and adjustment
 - [x] Palette sorting
 - [ ] Quick palette sorting(Better TSP solver)
 - [x] Palette save and load
 - [ ] Palette extraction from image
 - [ ] Palette implementation to image
+
+Bugs:
+
+- [ ] Color space navigation, broken camera rotation
+- [ ] File read and write on Linux (file paths are written in windows style, need platform-specific options)
 
 ## How to Build FunPalette
 1. Install OpenGL
@@ -27,11 +31,17 @@ Building on Ubuntu:
 sudo apt-get install libeigen3-dev
 sudo apt-get install libsdl2-dev
 
-git clone https://github.com/media-comp/2022-FunPalettes.git
+mkdir FunPalettes
+git clone https://github.com/media-comp/2022-FunPalettes.git FunPalettes/
 mkdir build
 cd ./build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
+```
+
+Run:
+```shell
+./FunPalettes
 ```
 
 Buliding on Windows:
