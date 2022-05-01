@@ -1,6 +1,7 @@
 #include <cstdio>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 #include "d2array.hpp"
 #include "context.h"
@@ -9,6 +10,11 @@
 #include "palette_loader.h"
 #include "palette_sort.h"
 #include "palette_interpolate.h"
+
+struct color_index {
+  SCALAR z;
+  int index;
+};
 
 int main() {
   SDL_SetMainReady();
@@ -41,6 +47,9 @@ int main() {
   SCALAR dis = 100000.0f;
   int interpolate_num = 0;
 
+  canvas->drawRay(camera->worldToScreen(VEC3(0, 0, 0)),
+                  camera->worldToScreen(VEC3(1, 0, 0)), 5.0f, VEC3(1, 0, 0));
+
   // Main loop
   bool done = false;
   while (!done) {
@@ -59,6 +68,7 @@ int main() {
             canvas->sdlToScreen(VEC2I(event.button.x, event.button.y));
         if (canvas->checkInCanvas(screen_pos)) {
           drag_start = screen_pos;
+          drag_end = screen_pos;
           camera->enableDrag();
         }
       } else if (event.type == SDL_MOUSEBUTTONUP && event.button.button == 1) {
@@ -77,9 +87,6 @@ int main() {
     ImGui::SetNextWindowPos(ImVec2(width * 0.02f, height * 0.04f));
     ImGui::SetNextWindowSize(ImVec2(width * 0.2f, height * 0.92f));
     ImGui::Begin("Palette Editor");
-    /*ImGui::Text("__________________");
-    ImGui::Text("Debug Editor");
-    ImGui::InputSCALAR3("Debug Window", camera->get_pos().data());*/
 
     if (ImGui::Button("Load Color")) loadPalette(color_list);
     if (ImGui::Button("Save Color")) savePalette(color_list);
@@ -112,7 +119,6 @@ int main() {
     ImGui::End();
 
     context.clearScreen(0.84f, 0.84f, 0.84f);
-
     canvas->clearCanvas(VEC3(33, 37, 43) / 255.0f);
 
     for (int i = 0; i + 1 < color_list.size(); i++) {
@@ -121,10 +127,17 @@ int main() {
                        color_list[i].rgb3f());
     }
 
-    for (auto& color : color_list) {
-      canvas->drawPoint(camera->worldToScreen(color.lab()), 15.0f,
-                        color.rgb3f());
+    std::vector<color_index> sort_list;
+    for (int i = 0; i < color_list.size(); i++)
+      sort_list.emplace_back(color_index{color_list[i].lab()(2), i});
+    std::sort(
+        sort_list.begin(), sort_list.end(),
+        [](const color_index a, const color_index b) { return a.z > b.z; });
+    for (auto i : sort_list) {
+      canvas->drawPoint(camera->worldToScreen(color_list[i.index].lab()), 15.0f,
+                        color_list[i.index].rgb3f());
     }
+
     palette_canvas->clearCanvas(VEC3(240, 240, 240) / 255.0f);
     SCALAR indentx = 0.005f;
     SCALAR paddingx = 0.03f;

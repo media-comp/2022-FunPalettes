@@ -12,7 +12,7 @@ class Camera {
   void setCamera(const VEC3& pos, const VEC3& look_at, SCALAR length,
                  SCALAR camera_width, SCALAR ratio);
   void updateCameraProj();
-  VEC2 worldToScreen(const VEC3& point);
+  VEC3 worldToScreen(const VEC3& point);
   void enableDrag();
   void disableDrag();
   void rotateCamera(VEC2 drag, SCALAR s);
@@ -26,6 +26,7 @@ class Camera {
   VEC3 m_look_at;
   VEC3 m_dir;
   Eigen::Matrix3f m_proj;
+  Eigen::Matrix3f m_origin_proj;
   VEC3 m_origin_pos;
   VEC3 m_origin_dir;
   SCALAR m_length;

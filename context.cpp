@@ -52,7 +52,20 @@ VEC2 Canvas::canvasToScreen(VEC2 point) {
   return VEC2(x, y);
 }
 
+VEC2 Canvas::canvasToScreen(VEC3 point) {
+  SCALAR x = (point(0) * m_ratio(0) + m_canvas_coord(0)) * 2.0f - 1.0f;
+  SCALAR y = (point(1) * m_ratio(1) + m_canvas_coord(1)) * 2.0f - 1.0f;
+  return VEC2(x, y);
+}
+
 bool Canvas::checkInCanvas(VEC2 screen_pos) {
+  return screen_pos(0) >= m_canvas_coord(0) &&
+         screen_pos(1) >= m_canvas_coord(1) &&
+         screen_pos(0) <= m_canvas_coord(0) + m_ratio(0) &&
+         screen_pos(1) <= m_canvas_coord(1) + m_ratio(1);
+}
+
+bool Canvas::checkInCanvas(VEC3 screen_pos) {
   return screen_pos(0) >= m_canvas_coord(0) &&
          screen_pos(1) >= m_canvas_coord(1) &&
          screen_pos(0) <= m_canvas_coord(0) + m_ratio(0) &&
@@ -64,55 +77,62 @@ VEC2 Canvas::sdlToScreen(VEC2I point) {
               1.0f - static_cast<SCALAR>(point(1)) / m_window_size(1));
 }
 
-void Canvas::drawPoint(VEC2 pos, SCALAR radius, VEC3 color) {
-  if (!inCanvas(pos)) return;
-  pos = canvasToScreen(pos);
+void Canvas::drawPoint(VEC3 pos, SCALAR radius, VEC3 color) {
+  if (pos(2) < 0 || !inCanvas(pos)) return;
+  VEC2 screen_pos = canvasToScreen(pos);
   glColor3f(color(0), color(1), color(2));
   glEnable(GL_POINT_SMOOTH);
   glPointSize(radius);
   glBegin(GL_POINTS);
-  glVertex3f(pos(0), pos(1), 0);
+  glVertex3f(screen_pos(0), screen_pos(1), 0);
   glEnd();
   glDisable(GL_POINT_SMOOTH);
 }
-void Canvas::drawLine(VEC2 from, VEC2 to, SCALAR width, VEC3 color) {
-  static auto min = [](SCALAR x, SCALAR y) { return x < y ? x : y; };
-  if (!(inCanvas(from) || inCanvas(to))) return;
-  if (!inCanvas(from) && inCanvas(to)) {
-    VEC2 dft = from - to;
-    dft.normalize();
-    SCALAR ms = 1000.0f;
-    if (from(0) < padding)
-      ms = min(ms, -to(0) / dft(0));
-    else if (from(0) > 1.0f - padding)
-      ms = min(ms, (1.0f - padding - to(0)) / dft(0));
-    if (from(1) < padding)
-      ms = min(ms, -to(1) / dft(1));
-    else if (from(1) > 1.0f - padding)
-      ms = min(ms, (1.0f - padding - to(1)) / dft(1));
-    from = to + dft * ms;
-  } else if (inCanvas(from) && !inCanvas(to)) {
-    VEC2 dft = to - from;
-    dft.normalize();
-    SCALAR ms = 1000.0f;
-    if (to(0) < padding)
-      ms = min(ms, -from(0) / dft(0));
-    else if (to(0) > 1.0f - padding)
-      ms = min(ms, (1.0f - padding - from(0)) / dft(0));
-    if (to(1) < padding)
-      ms = min(ms, -from(1) / dft(1));
-    else if (to(1) > 1.0f - padding)
-      ms = min(ms, (1.0f - padding - from(1)) / dft(1));
-    to = from + dft * ms;
-  }
-  from = canvasToScreen(from);
-  to = canvasToScreen(to);
+void Canvas::drawLine(VEC3 from, VEC3 to, SCALAR width, VEC3 color) {
+  Line3 line{from, to};
+  bool in_bound = true;
+  in_bound = in_bound && line.bound(0, padding, true);
+  in_bound = in_bound && line.bound(0, 1.0f - padding, false);
+  in_bound = in_bound && line.bound(1, padding, true);
+  in_bound = in_bound && line.bound(1, 1.0f - padding, false);
+  in_bound = in_bound && line.bound(2, 0, true);
+  if (!in_bound) return;
+  VEC2 start = canvasToScreen(line.from);
+  VEC2 end = canvasToScreen(line.to);
   glColor3f(color(0), color(1), color(2));
   glEnable(GL_LINE_SMOOTH);
   glLineWidth(width);
   glBegin(GL_LINES);
-  glVertex3f(from(0), from(1), 0);
-  glVertex3f(to(0), to(1), 0);
+  glVertex3f(start(0), start(1), 0);
+  glVertex3f(end(0), end(1), 0);
+  glEnd();
+  glDisable(GL_LINE_SMOOTH);
+}
+
+void Canvas::drawRay(VEC3 from, VEC3 to, SCALAR width, VEC3 color) {
+  Line3 line{from, to};
+  // line.print("initial");
+  line.set_as_ray();
+  bool in_bound = true;
+  // line.print("step0");
+  in_bound = in_bound && line.bound(0, padding, true);
+  // line.print("step1");
+  in_bound = in_bound && line.bound(0, 1.0f - padding, false);
+  // line.print("step2");
+  in_bound = in_bound && line.bound(1, padding, true);
+  // line.print("step3");
+  in_bound = in_bound && line.bound(1, 1.0f - padding, false);
+  // line.print("step4");
+  in_bound = in_bound && line.bound(2, 0, true);
+  if (!in_bound) return;
+  VEC2 start = canvasToScreen(line.from);
+  VEC2 end = canvasToScreen(line.to);
+  glColor3f(color(0), color(1), color(2));
+  glEnable(GL_LINE_SMOOTH);
+  glLineWidth(width);
+  glBegin(GL_LINES);
+  glVertex3f(start(0), start(1), 0);
+  glVertex3f(end(0), end(1), 0);
   glEnd();
   glDisable(GL_LINE_SMOOTH);
 }

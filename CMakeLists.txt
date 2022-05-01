@@ -24,6 +24,7 @@ add_executable(FunPalettes)
 target_sources(FunPalettes
   PRIVATE
   main.cpp
+  data_type.cpp
   context.cpp
   color_point.cpp
   camera.cpp

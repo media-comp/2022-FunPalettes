@@ -18,15 +18,23 @@ class Canvas {
  public:
   Canvas(VEC2I window_size, VEC2I canvas_size, VEC2I canvas_pos);
   void clearCanvas(VEC3 color);
-  void drawPoint(VEC2 pos, SCALAR radius, VEC3 color);
-  void drawLine(VEC2 from, VEC2 to, SCALAR width, VEC3 color);
+  void drawPoint(VEC3 pos, SCALAR radius, VEC3 color);
+  void drawLine(VEC3 from, VEC3 to, SCALAR width, VEC3 color);
+  void drawRay(VEC3 from, VEC3 to, SCALAR width, VEC3 color);
   void drawRect(VEC2 lb, VEC2 rb, VEC2 rt, VEC2 lt, VEC3 color);
   bool checkInCanvas(VEC2 screen_pos);
+  bool checkInCanvas(VEC3 screen_pos);
   VEC2 canvasToScreen(VEC2 point);
+  VEC2 canvasToScreen(VEC3 point);
   VEC2 sdlToScreen(VEC2I point);
 
  private:
   inline bool inCanvas(VEC2 point) {
+    return (point(0) >= padding) && (point(0) <= 1.0f - padding) &&
+           (point(1) >= padding) && (point(1) <= 1.0f - padding);
+  }
+
+  inline bool inCanvas(VEC3 point) {
     return (point(0) >= padding) && (point(0) <= 1.0f - padding) &&
            (point(1) >= padding) && (point(1) <= 1.0f - padding);
   }

@@ -9,14 +9,13 @@ using VEC2I = Eigen::Vector2i;
 using VEC3I = Eigen::Vector3i;
 using SCALAR = typename VEC3::Scalar;
 
-struct Line2 {
-  VEC2 from;
-  VEC2 to;
-};
-
 struct Line3 {
   VEC3 from;
   VEC3 to;
+  void set_as_ray();
+  void print(std::string s = "");
+  bool bound(int n, SCALAR x, bool greater);
+  bool cast_to_bound(int n, SCALAR x, bool greater);
 };
 
 #endif  // DATA_TYPE_H_

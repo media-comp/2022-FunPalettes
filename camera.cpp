@@ -42,27 +42,31 @@ void Camera::updateCameraProj() {
   m_proj(2, 2) = z(2);
 }
 
-VEC2 Camera::worldToScreen(const VEC3& point) {
+VEC3 Camera::worldToScreen(const VEC3& point) {
   VEC3 p = point;
   p = m_proj * (p - m_pos);
-  p *= m_length / p(1);
-  VEC2 screen_pos((p(0) + 1.0f) / 2.0f, (p(2) + 1.0f) / 2.0f);
+  SCALAR local_y = p(1);
+  p *= m_length / fabs(local_y);
+  VEC3 screen_pos((p(0) + 1.0f) / 2.0f, (p(2) + 1.0f) / 2.0f,
+                  local_y - m_length);
   return screen_pos;
 }
 
 void Camera::enableDrag() {
   m_origin_pos = m_pos;
   m_origin_dir = m_dir;
+  m_origin_proj = m_proj;
 }
 
 void Camera::disableDrag() {}
 
 void Camera::rotateCamera(VEC2 drag, SCALAR s) {
+  if (drag.norm() < 0.01) return;
   SCALAR scale = drag.norm() * s;
   VEC3 axis(drag(0), 0, drag(1));
   axis.normalize();
-  axis = m_proj.transpose() * axis;
-  axis = axis.cross(m_dir);
+  axis = m_origin_proj.transpose() * axis;
+  axis = axis.cross(m_origin_dir);
   SCALAR w = cos(scale);
   SCALAR ws = sin(scale);
   Eigen::Quaternion<SCALAR> quat(w, axis(0) * ws, axis(1) * ws, axis(2) * ws);
