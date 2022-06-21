@@ -2,7 +2,7 @@
 
 FunPalettes is a project aimed to help people with limited artskills understand colors, create and adjust color palettes, extract color palettes form images and apply new palettes.
 
-![thumbnail](screenshot.png)
+![thumbnail](Screenshot.png)
 
 Updates:
 
