@@ -4,6 +4,12 @@ FunPalettes is a project aimed to help people with limited artskills understand 
 
 ![thumbnail](screenshot.png)
 
+Updates:
+
+*Fun Palette* will be an online color palette editor.
+live demo: https://yoharol.github.io/pages/funpalette/index.html
+The online version is still in progress.
+
 TODO:
 
 - [x] Color space visualization
@@ -11,13 +17,12 @@ TODO:
 - [x] Palette sorting
 - [ ] Quick palette sorting(Better TSP solver)
 - [x] Palette save and load
-- [ ] Palette extraction from image
-- [ ] Palette implementation to image
+- [ ] html version
 
 Bugs:
 
-- [ ] Color space navigation, broken camera rotation
-- [ ] File read and write on Linux (file paths are written in windows style, need platform-specific options)
+- [x] Color space navigation, broken camera rotation
+- [x] File read and write on Linux (file paths are written in windows style, need platform-specific options)
 
 ## How to Build FunPalette
 1. Install OpenGL
