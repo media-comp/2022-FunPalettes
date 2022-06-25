@@ -6,6 +6,9 @@ import { Line2 } from "line2"
 import { LineMaterial } from "lineMaterial"
 import { LineGeometry } from "lineGeometry"
 
+var cover = document.querySelector(".cover")
+cover.parentNode.removeChild(cover)
+
 let canvas, camera, scene, renderer, controls;
 
 const sprite = new THREE.TextureLoader().load('sprite.png');
@@ -16,9 +19,12 @@ function init_scene() {
 
   canvas = document.querySelector(".webgl");
 
+  var inwidth = window.innerWidth;
+  var inheight = window.innerHeight;
+
   const size = {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: inwidth * 0.46, //window.innerWidth,
+    height: inheight * 0.45, // window.innerHeight,
   };
 
 
@@ -28,13 +34,13 @@ function init_scene() {
   });
   renderer.setSize(size.width, size.height);
   renderer.setPixelRatio(window.devicePixelRatio);
-  renderer.setClearColor(0x000000, 1.0);
+  renderer.setClearColor(0x171723, 1.0);
   renderer.shadowMap.enabled = true;
   document.body.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
 
-  camera = new THREE.PerspectiveCamera(45, size.width / size.height, 1, 500);
+  camera = new THREE.PerspectiveCamera(45, size.width / size.height, 1, 1000);
   camera.position.set(0, 0, 100);
   camera.lookAt(0, 0, 0);
   scene.add(camera);
