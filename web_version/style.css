@@ -1,0 +1,198 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+
+body {
+    margin: 0px;
+    overflow: hidden;
+    background: #21252b;
+}
+
+header {
+    background: black;
+    padding: 20px;
+    color: white;
+}
+
+section {
+    background-color: white;
+}
+
+div.cover {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+div.container {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 20vw 60vw 20fr;
+    grid-template-rows: 13vh 1fr 1fr 3vh;
+    box-sizing: border-box;
+}
+
+div.container .header {
+    grid-row: 1;
+    grid-column-start: 1;
+    grid-column-end: 5;
+    text-align: center;
+    font-family: 'Oswald', sans-serif;
+    background-color: #282c34;
+    border-bottom: 5px solid #4b4b4b;
+}
+
+
+.container .sideBar {
+    grid-column: 1;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    background-color: #282c34;
+}
+
+#right {
+    grid-column: 3;
+}
+
+.sideBarHeader {
+    width: 100%;
+    height: 5vh;
+    font-family: 'Oswald', sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    color: #cccccc;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #333842;
+}
+
+.container .canvasContainer {
+    grid-column: 3;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    padding: 2vh 2vw;
+    background-color: #333842;
+}
+
+.footer {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row: 4;
+    background-color: #333842;
+}
+
+h1 {
+    color: white;
+    font-size: 50px;
+}
+
+h2 {
+    color: white;
+    font-size: 100px;
+}
+
+h3 {
+    color: white;
+    font-size: 50px;
+    font-weight: lighter;
+}
+
+button {
+    border: none;
+    background: #1B9CFC;
+    color: white;
+    border-radius: 10px;
+    width: 50%;
+    height: 64px;
+    font-size: 40px;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: normal;
+    text-decoration: none;
+}
+
+canvas.webgl {
+    position: fixed;
+    left: 25vw;
+    top: 17vh;
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);
+}
+
+input:focus {
+    outline: none;
+}
+
+input.color {
+    text-align: center;
+    margin: 2px;
+    padding: 5px;
+    border: 0;
+    outline: 0;
+    width: 140px;
+    height: 20px;
+}
+
+button.sub {
+    background: url(remove.png);
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    text-align: center;
+    font-size: 40px;
+    height: 25px;
+    width: 25px;
+    margin-left: 10%;
+    color: #3264fe;
+    display: flex;
+    border-radius: 0px;
+    align-items: center;
+    justify-content: center;
+}
+
+button.add-color {
+    background-color: #c44e41;
+    height: 40px;
+    width: 20%;
+    font-family: "Roboto Mono", monospace;
+    font-weight: 200;
+    font-size: 30px;
+    border-radius: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*box-shadow: 0 20px 30px rgba(0, 0, 0, 0.3);*/
+    margin: 0.5vw;
+}
+
+#add {
+    float: left;
+}
+
+#sub {
+    float: right;
+}
+
+#reorder{
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    border-radius: 3px;
+    width: 50%;
+}
+
+.color-slot {
+    display: flex;
+    align-items: center;
+}
