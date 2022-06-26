@@ -53,3 +53,28 @@ Buliding on Windows:
 The only difference here is how you install and manage packages with CMake. If you are not familiar with this, I recommend this tool for you to start using CMake on Windows:
 
 https://github.com/microsoft/vcpkg
+
+## Build FunPalette Docker (Only MacOS)
+Install xquartz to receive the GUI
+```
+brew cask install xquartz
+open -a XQuartz
+```
+Open the Preferences Menu of XQuartz
+- Turn on **Allow connections from network clients**
+  
+And Open X server on Mac
+```
+defaults read org.xquartz.X11 enable_iglx -bool true
+xhost +
+```
+### Docker Part
+Build Image with dockerfile
+$IP from ```ipconfig en0```
+
+```
+docker build -t funpalettes:latest .
+docker run --rm -it -e DISPLAY=$ip:0  -v -v /tmp/.X11-unix:/tmp/.X11-unix --name myfun funpalettes:latest bash
+``` 
+
+
