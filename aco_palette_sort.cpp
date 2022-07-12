@@ -112,13 +112,11 @@ double ACO::PHI (int colori, int colorj, int antk) {
 
   double sum = 0.0;
   for (int c=0; c<NUMBEROFCOLORS; c++) {
-  if (exists(colori, c)) {
-    if (!vizited(antk, c)) {
+    if (!visited(antk, c)) {
     double ETA = (double) pow (1 / DISTANCES[colori][c], BETA);
     double TAU = (double) pow (PHEROMONES[colori][c],   ALPHA);
     sum += ETA * TAU;
-    }  
-  }  
+    }   
   }
   return (ETAij * TAUij) / sum;
 }
@@ -151,12 +149,10 @@ void ACO::route (int antk) {
       if (colori == c) {
         continue;  
       }
-      if (exists (colori, c)) {
-        if (!vizited (antk, c)) {
-          PROBS[count][0] = PHI (colori, c, antk);
-          PROBS[count][1] = (double) c;
-          count++;
-        }
+      if (!visited (antk, c)) {
+        PROBS[count][0] = PHI (colori, c, antk);
+        PROBS[count][1] = (double) c;
+        count++;
       }
     }
     // deadlock
