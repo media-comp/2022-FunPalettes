@@ -18,11 +18,8 @@ public:
   
   void init ();
   
-  void connectCOLORS (int colori, int colorj);
-  void setCITYPOSITION (int city, double x, double y);
+  void connectCOLORS (int colori, int colorj, double edgedistance);
   
-  void printPHEROMONES ();
-  void printGRAPH ();
   void printRESULTS ();
   
   void optimize (int ITERATIONS);
@@ -30,8 +27,6 @@ public:
   int *BESTROUTE;
 
 private:
-  double distance (int colori, int colorj);
-  bool exists (int colori, int colorc);
   bool visited (int antk, int c);
   double PHI (int colori, int colorj, int antk);
   
@@ -39,7 +34,6 @@ private:
   
   int color ();
   void route (int antk);
-  int valid (int antk, int iteration);
   
   void updatePHEROMONES ();
 
